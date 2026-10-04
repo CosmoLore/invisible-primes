@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Invisible Primes: Credit Risk Lab</title>
+<meta name="description" content="Score borrowers with traditional and alternative data, and explore the survey behind the Invisible Primes research project.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,500;6..72,700&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f2f5f7;--card:#fff;--ink:#14263a;--mut:#5b6b7b;--line:#d9e1e8;--teal:#0e7c86;--tealD:#0a5960;--amber:#c98408;--red:#b3392f;--green:#2d7a4b;box-sizing:border-box}
+@media(prefers-color-scheme:dark){:root{--bg:#0f1a24;--card:#17242f;--ink:#e8eef3;--mut:#9fb0bf;--line:#2a3b4a;--teal:#3fb7c2;--tealD:#7fd6de;--amber:#e8aa2f;--red:#ef7a6e;--green:#5fc38a}}
+*,*::before,*::after{box-sizing:inherit}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 "Instrument Sans",system-ui,sans-serif}
+h1,h2,h3{font-family:Newsreader,Georgia,serif;line-height:1.15;margin:0 0 .5em}
+h1{font-size:clamp(2rem,5vw,3.4rem)} h2{font-size:1.6rem} h3{font-size:1.15rem}
+a{color:var(--teal)} :focus-visible{outline:3px solid var(--amber);outline-offset:2px}
+.wrap{max-width:1100px;margin:0 auto;padding:0 20px}
+header{padding:28px 0 8px}
+.hero{padding:28px 0 20px;display:grid;gap:24px;grid-template-columns:1.2fr 1fr;align-items:center}
+.hero p{max-width:60ch;color:var(--mut);font-size:1.08rem}
+.pair{display:grid;gap:10px}
+.pair div{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 16px}
+.pair b{font-family:Newsreader,serif;font-size:1.6rem;display:block}
+nav{display:flex;gap:6px;flex-wrap:wrap;border-bottom:1px solid var(--line);margin:8px 0 22px;position:sticky;top:0;background:var(--bg);z-index:5;padding-top:6px}
+nav button{border:0;background:none;color:var(--mut);font:600 .98rem "Instrument Sans";padding:10px 14px;cursor:pointer;border-bottom:3px solid transparent}
+nav button[aria-selected=true]{color:var(--tealD);border-color:var(--teal)}
+section[hidden]{display:none}
+.grid{display:grid;gap:20px;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px}
+fieldset{border:0;padding:0;margin:0 0 14px}
+legend{font-weight:600;margin-bottom:6px;color:var(--tealD)}
+label{display:block;font-size:.92rem;margin:10px 0 4px}
+label span{float:right;color:var(--mut);font-variant-numeric:tabular-nums}
+input[type=number],select{width:100%;padding:10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);font:inherit}
+input[type=range]{width:100%;accent-color:var(--teal)}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.btns{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+button.primary,button.ghost{font:600 1rem "Instrument Sans";padding:12px 18px;border-radius:10px;cursor:pointer}
+button.primary{background:var(--teal);color:#fff;border:0} button.primary:hover{background:var(--tealD)}
+button.ghost{background:none;border:1px solid var(--line);color:var(--ink)}
+.dial{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.score{font:700 4rem/1 Newsreader,serif}
+.pill{display:inline-block;padding:4px 12px;border-radius:99px;font-weight:600;font-size:.9rem;color:#fff}
+.bar{height:12px;background:var(--line);border-radius:6px;position:relative;margin:8px 0 18px}
+.bar i{position:absolute;inset:0 auto 0 0;border-radius:6px;background:var(--teal);transition:width .5s}
+.scale{height:10px;border-radius:5px;background:linear-gradient(90deg,var(--red),var(--amber),var(--green));position:relative;margin:14px 0 4px}
+.scale em{position:absolute;top:-6px;width:4px;height:22px;background:var(--ink);border-radius:2px;transition:left .5s}
+.kv{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:14px 0}
+.kv div{background:var(--bg);border-radius:10px;padding:10px}.kv small{color:var(--mut);display:block}.kv b{font-size:1.15rem}
+.cmp{display:grid;grid-template-columns:110px 1fr 56px;gap:8px;align-items:center;font-size:.92rem}
+.cmp .bar{margin:4px 0}
+.note{background:var(--bg);border-left:4px solid var(--amber);padding:10px 14px;border-radius:6px;font-size:.92rem;color:var(--mut)}
+table{border-collapse:collapse;width:100%;font-size:.93rem;display:block;overflow-x:auto}
+th,td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left;white-space:nowrap}
+.sg{display:grid;gap:20px;grid-template-columns:repeat(auto-fit,minmax(310px,1fr))}
+.q{display:grid;grid-template-columns:120px 1fr 92px;gap:8px;align-items:center;font-size:.88rem;margin:5px 0}
+.q .bar{margin:0;height:10px}.q small{color:var(--mut);text-align:right}
+footer{margin:40px 0;color:var(--mut);font-size:.88rem}
+@media(max-width:820px){.hero,.grid{grid-template-columns:1fr}.q{grid-template-columns:100px 1fr 80px}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header><strong>Invisible Primes</strong> &nbsp;|&nbsp; FinTech lending with alternative data</header>
+<div class="hero">
+ <div>
+  <h1>Good borrowers who look invisible to a credit bureau</h1>
+  <p>Enter a borrower's details and see how a traditional credit score and an alternative-data score judge the same person, with default probability, loan terms and expected loss.</p>
+ </div>
+ <div class="pair"><div><b>3 billion</b>adults worldwide have no credit record</div><div><b>5 to 20%</b>extra predictive power from rent, utility and network data for new customers (FICO)</div></div>
+</div>
+
+<nav role="tablist">
+ <button role="tab" aria-selected="true" data-t="lab">Credit risk lab</button>
+ <button role="tab" aria-selected="false" data-t="stats">Survey statistics</button>
+ <button role="tab" aria-selected="false" data-t="method">How it works</button>
+</nav>
+
+<section id="lab">
+<div class="grid">
+<form class="card" id="f" onsubmit="return false">
+ <h2>Borrower details</h2>
+ <fieldset><legend>Traditional credit data</legend>
+  <label>Years of credit history <span id="o_hist"></span></label><input type="range" id="hist" min="0" max="15" step="1" value="0">
+  <label>On-time payments on credit accounts <span id="o_pay"></span></label><input type="range" id="pay" min="0" max="100" value="90">
+  <label>Credit utilisation (share of limit used) <span id="o_util"></span></label><input type="range" id="util" min="0" max="100" value="30">
+  <div class="row"><div><label for="mix">Types of credit held</label><select id="mix"><option value="0">None</option><option value="1">1 type</option><option value="2">2 types</option><option value="3">3 or more</option></select></div>
+  <div><label for="inq">Loan enquiries, last 12 months</label><input type="number" id="inq" min="0" max="20" value="0"></div></div>
+ </fieldset>
+ <fieldset><legend>Alternative data</legend>
+  <label>Utility bills paid on time <span id="o_ut"></span></label><input type="range" id="ut" min="0" max="100" value="95">
+  <label>Rent and mobile bills paid on time <span id="o_rent"></span></label><input type="range" id="rent" min="0" max="100" value="90">
+  <label>Years in current job or business <span id="o_emp"></span></label><input type="range" id="emp" min="0" max="10" step="0.5" value="2">
+  <label>Months of expenses held as savings <span id="o_sav"></span></label><input type="range" id="sav" min="0" max="12" step="0.5" value="2">
+  <div class="row"><div><label for="edu">Education</label><select id="edu"><option value="0.3">School</option><option value="0.6" selected>Graduate</option><option value="0.85">Postgraduate</option></select></div>
+  <div><label for="soc">Digital footprint (opt-in)</label><select id="soc"><option value="0.5">Not shared</option><option value="0.8">Stable and consistent</option><option value="0.3">Thin or erratic</option></select></div></div>
+ </fieldset>
+ <fieldset><legend>Loan request</legend>
+  <div class="row"><div><label for="inc">Annual income (₹)</label><input type="number" id="inc" min="0" step="10000" value="420000"></div>
+  <div><label for="amt">Loan amount (₹)</label><input type="number" id="amt" min="1000" step="5000" value="150000"></div></div>
+  <div class="row"><div><label for="ten">Tenure (months)</label><input type="number" id="ten" min="3" max="84" value="24"></div>
+  <div><label for="rel">Relationship with lender</label><select id="rel"><option value="new">New customer</option><option value="weak">Weak relationship</option><option value="strong">Strong relationship</option></select></div></div>
+ </fieldset>
+ <div class="btns"><button class="primary" id="go">Calculate risk</button><button class="ghost" id="ex">Load an invisible prime</button><button class="ghost" id="ex2">Load a risky profile</button></div>
+</form>
+
+<div class="card" id="out" aria-live="polite">
+ <h2>Result</h2>
+ <div class="dial"><div class="score" id="sc">--</div><div><span class="pill" id="band">Waiting</span><div id="dec" style="margin-top:6px;color:var(--mut)">Press “Calculate risk” to start.</div></div></div>
+ <div class="scale"><em id="mk" style="left:0"></em></div>
+ <div style="display:flex;justify-content:space-between;font-size:.8rem;color:var(--mut)"><span>300</span><span>600</span><span>900</span></div>
+ <div class="kv"><div><small>Default probability</small><b id="pd">--</b></div><div><small>Expected loss</small><b id="el">--</b></div><div><small>Offered rate</small><b id="rt">--</b></div><div><small>Monthly EMI</small><b id="emi">--</b></div><div><small>EMI to income</small><b id="dti">--</b></div><div><small>Profile</small><b id="prof">--</b></div></div>
+ <h3>Same borrower, three models</h3>
+ <div id="cmp"></div>
+ <h3>What drives the score</h3>
+ <div id="drv"></div>
+ <p class="note" id="msg">Illustrative scorecard for a research project. Not a real lending decision.</p>
+</div>
+</div>
+</section>
+
+<section id="stats" hidden>
+ <h2>What 50 people in Mumbai told us</h2>
+ <p style="color:var(--mut);max-width:70ch">Convenience sample, one week, Google Form. Results describe this sample only. Bars show percentages; the range is a 95% Wilson confidence interval, which is wide at n = 50.</p>
+ <div class="card" style="margin-bottom:20px"><div class="kv" id="lk"></div></div>
+ <div class="sg" id="sg"></div>
+</section>
+
+<section id="method" hidden>
+ <div class="grid">
+  <div class="card"><h2>The scorecard</h2>
+   <p>Every input becomes a value from 0 to 1. Weights come from the report.</p>
+   <table><tr><th>Traditional (FICO weights)</th><th>Weight</th></tr><tr><td>Payment history</td><td>35%</td></tr><tr><td>Amounts owed</td><td>30%</td></tr><tr><td>Length of history</td><td>15%</td></tr><tr><td>Credit mix</td><td>10%</td></tr><tr><td>New credit</td><td>10%</td></tr></table><br>
+   <table><tr><th>Alternative data</th><th>Weight</th></tr><tr><td>Utility payments</td><td>30%</td></tr><tr><td>Rent and mobile payments</td><td>20%</td></tr><tr><td>Employment stability</td><td>20%</td></tr><tr><td>Savings buffer</td><td>15%</td></tr><tr><td>Education</td><td>10%</td></tr><tr><td>Digital footprint (opt-in)</td><td>5%</td></tr></table>
+   <p>Alternative weights are this project's assumptions, ranked by how much respondents trusted each source (utility 78%, employment 74%, education 40%, social 52%) and by the FICO evidence that social data is the weakest.</p></div>
+  <div class="card"><h2>From factors to a score</h2>
+   <p><b>Combined index</b> = share × traditional + (1 − share) × alternative. The traditional share is 45% for new customers, 60% for weak and 75% for strong relationships, following the FICO table where alternative data adds the most for new customers.</p>
+   <p><b>Score</b> = 300 + 600 × index.<br><b>Default probability</b> = 1 / (1 + e^(−1.86 + 7.19 × index)), tuned so index 0.5 gives 15% and 0.8 gives 2%.<br><b>Expected loss</b> = PD × 45% loss given default × loan amount.<br><b>Rate</b> = 11% + 40 × PD, capped at 36%.</p>
+   <p><b>Thin file rule:</b> with no credit history, the traditional model has nothing to read, so it gets a floor index of 0.30. A borrower with strong alternative data but a thin file is flagged as an <b>invisible prime</b>.</p>
+   <p class="note">The curve is illustrative, not fitted to real defaults. To use it for real lending, calibrate it on repayment data and test it for bias across groups.</p>
+   <h3>FICO: added predictive value of alternative data</h3>
+   <table><tr><th>Source</th><th>New</th><th>Weak</th><th>Strong</th></tr><tr><td>Transactional</td><td>N/A</td><td>0-5%</td><td>5-10%</td></tr><tr><td>Rental and utility</td><td>5-10%</td><td>5-10%</td><td>0-5%</td></tr><tr><td>Social profile</td><td>0-15%</td><td>0-15%</td><td>0-5%</td></tr><tr><td>Social network</td><td>10-20%</td><td>10-20%</td><td>5-15%</td></tr><tr><td>Clickstream</td><td>0-10%</td><td>0-10%</td><td>0-5%</td></tr><tr><td>Text</td><td>N/A</td><td>0-5%</td><td>0-5%</td></tr></table></div>
+ </div>
+</section>
+<footer>Built from the research report “Invisible Primes: FinTech Lending with Alternative Data”. For learning and demonstration only.</footer>
+</div>
+
+<script>
+const $=id=>document.getElementById(id),clamp=(x,a=0,b=1)=>Math.min(b,Math.max(a,x)),inr=n=>"₹"+Math.round(n).toLocaleString("en-IN");
+const sl={hist:"yrs",pay:"%",util:"%",ut:"%",rent:"%",emp:"yrs",sav:"mo"};
+for(const k in sl){const r=$(k),o=$("o_"+k),u=sl[k];const f=()=>o.textContent=r.value+" "+u;r.oninput=f;f()}
+// tabs
+document.querySelectorAll("nav button").forEach(b=>b.onclick=()=>{document.querySelectorAll("nav button").forEach(x=>x.setAttribute("aria-selected",x==b));["lab","stats","method"].forEach(s=>$(s).hidden=s!=b.dataset.t)});
+const W_T={Payment:.35,Owed:.30,Length:.15,Mix:.10,New:.10},W_A={Utility:.30,"Rent/mobile":.20,Employment:.20,Savings:.15,Education:.10,Digital:.05},SHARE={new:.45,weak:.60,strong:.75};
+function model(){
+ const v=id=>+$(id).value,thin=v("hist")===0;
+ const t={Payment:v("pay")/100,Owed:1-v("util")/100,Length:clamp(v("hist")/10),Mix:v("mix")/3,New:1-clamp(v("inq")/6)};
+ const a={Utility:v("ut")/100,"Rent/mobile":v("rent")/100,Employment:clamp(v("emp")/5),Savings:clamp(v("sav")/6),Education:v("edu"),Digital:v("soc")};
+ const dot=(w,x)=>Object.keys(w).reduce((s,k)=>s+w[k]*x[k],0);
+ const T=thin?.30:dot(W_T,t),A=dot(W_A,a),s=SHARE[$("rel").value],C=s*T+(1-s)*A;
+ return{t,a,T,A,C,thin,s};
+}
+const pdOf=c=>1/(1+Math.exp(-1.86+7.19*c)),scoreOf=c=>Math.round(300+600*c);
+function run(){
+ const m=model(),pd=pdOf(m.C),amt=+$("amt").value,n=+$("ten").value,inc=+$("inc").value;
+ const rate=Math.min(.36,.11+.4*pd),r=rate/12,emi=r?amt*r/(1-Math.pow(1+r,-n)):amt/n,dti=inc?emi/(inc/12):9;
+ const sc=scoreOf(m.C);let band,col,dec;
+ if(dti>.5){band="Refer";col="var(--amber)";dec="Repayment would take over half of income. Reduce the amount or extend the tenure."}
+ else if(pd<.05){band="Low risk";col="var(--green)";dec="Approve at the offered rate."}
+ else if(pd<.12){band="Moderate risk";col="var(--teal)";dec="Approve, possibly with a lower limit."}
+ else if(pd<.25){band="Elevated risk";col="var(--amber)";dec="Send to manual review."}
+ else{band="High risk";col="var(--red)";dec="Decline, or offer a smaller secured loan."}
+ $("sc").textContent=sc;$("band").textContent=band;$("band").style.background=col;$("dec").textContent=dec;
+ $("mk").style.left=`calc(${(sc-300)/6}% - 2px)`;
+ $("pd").textContent=(pd*100).toFixed(1)+"%";$("el").textContent=inr(pd*.45*amt);$("rt").textContent=(rate*100).toFixed(1)+"%";$("emi").textContent=inr(emi);$("dti").textContent=(dti*100).toFixed(0)+"%";
+ const inv=m.thin&&m.A>=.7;$("prof").textContent=inv?"Invisible prime":m.thin?"Thin file":"Has credit file";
+ const row=(l,x)=>`<div class="cmp"><span>${l}</span><div class="bar"><i style="width:${x*100}%"></i></div><b>${scoreOf(x)}</b></div>`;
+ $("cmp").innerHTML=row("Traditional",m.T)+row("Alternative",m.A)+row("Combined",m.C);
+ const parts=[];for(const k in W_T)parts.push([k,W_T[k]*m.s*(m.thin?0:m.t[k]-.5)]);for(const k in W_A)parts.push([k,W_A[k]*(1-m.s)*(m.a[k]-.5)]);
+ parts.sort((x,y)=>Math.abs(y[1])-Math.abs(x[1]));const mx=Math.max(...parts.map(p=>Math.abs(p[1])),.001);
+ $("drv").innerHTML=parts.slice(0,6).map(p=>`<div class="cmp"><span>${p[0]}</span><div class="bar"><i style="width:${Math.abs(p[1])/mx*100}%;background:${p[1]>=0?"var(--green)":"var(--red)"}"></i></div><b>${p[1]>=0?"+":"-"}${Math.abs(p[1]*600).toFixed(0)}</b></div>`).join("");
+ $("msg").textContent=inv?`A bureau-only model would score this person ${scoreOf(m.T)} and likely decline. Alternative data lifts it to ${sc}. This is the "invisible prime" case from the report.`:m.thin?"Thin file: the traditional score is a placeholder floor. Alternative data carries most of the decision.":"Bars show points added or removed versus an average borrower. Illustrative scorecard, not a real lending decision.";
+}
+$("go").onclick=run;$("f").addEventListener("change",run);
+function load(o){for(const k in o){$(k).value=o[k];$(k).dispatchEvent(new Event("input"))}run()}
+$("ex").onclick=()=>load({hist:0,pay:0,util:0,mix:0,inq:0,ut:98,rent:95,emp:3,sav:3,edu:.6,soc:.8,inc:480000,amt:120000,ten:24,rel:"new"});
+$("ex2").onclick=()=>load({hist:4,pay:62,util:85,mix:1,inq:5,ut:60,rent:55,emp:.5,sav:.5,edu:.3,soc:.3,inc:240000,amt:300000,ten:24,rel:"weak"});
+// survey
+const S=[
+["Age",[["18-24",24],["25-34",12],["35-44",7],["45-54",3],["55+",4]]],
+["Employment status",[["Employed",24],["Unemployed",3],["Student",22],["Retired",1]]],
+["Annual income (₹)",[["Below 25k",23],["25k-50k",12],["50k-75k",2],["75k-100k",8],["100k+",9]]],
+["Familiarity with alternative-data lending",[["Very familiar",9],["Familiar",14],["A bit",12],["Not so",10],["Not at all",5]]],
+["Best alternative data sources (multi-select)",[["Utility bills",39],["Employment",37],["Social media",26],["Education",20],["Online shopping",14],["Other",1]],50],
+["Comfort with lenders using it",[["Very",3],["Comfortable",17],["A bit",16],["Not so",11],["Very uncomfortable",3]]],
+["Can it make lending more inclusive?",[["Yes",27],["Maybe",19],["No",4]]],
+["What matters in a platform (multi-select)",[["Transparency",41],["Interest rates",39],["Reputation",38],["Alt. data",29],["Speed",22],["Other",1]],50],
+["Would switch for better terms?",[["Yes",22],["Maybe",23],["No",4]]]];
+const wil=(k,n)=>{const z=1.96,p=k/n,d=1+z*z/n,c=p+z*z/(2*n),h=z*Math.sqrt(p*(1-p)/n+z*z/(4*n*n));return[(c-h)/d,(c+h)/d]};
+$("sg").innerHTML=S.map(([t,d,N])=>{const n=N||d.reduce((s,x)=>s+x[1],0);return`<div class="card"><h3>${t}</h3><small style="color:var(--mut)">n = ${n}</small>${d.map(([l,k])=>{const[lo,hi]=wil(k,n);return`<div class="q"><span>${l}</span><div class="bar"><i style="width:${k/n*100}%"></i></div><small>${(k/n*100).toFixed(0)}% (${(lo*100).toFixed(0)}-${(hi*100).toFixed(0)})</small></div>`}).join("")}</div>`}).join("");
+const wa=(d)=>{const n=d.reduce((s,x)=>s+x,0),m=d.reduce((s,x,i)=>s+x*(5-i),0)/n,v=d.reduce((s,x,i)=>s+x*Math.pow(5-i-m,2),0)/(n-1);return[m,Math.sqrt(v),Math.sqrt(v/n)]};
+const f=wa([9,14,12,10,5]),c=wa([3,17,16,11,3]);
+$("lk").innerHTML=`<div><small>Familiarity, weighted average (1-5)</small><b>${f[0].toFixed(2)}</b> <small>SD ${f[1].toFixed(2)}, 95% CI ±${(1.96*f[2]).toFixed(2)}</small></div><div><small>Comfort, weighted average (1-5)</small><b>${c[0].toFixed(2)}</b> <small>SD ${c[1].toFixed(2)}, 95% CI ±${(1.96*c[2]).toFixed(2)}</small></div><div><small>Think it is inclusive (Yes)</small><b>54%</b> <small>Only 8% say No</small></div>`;
+run();
+</script>
+</body>
+</html>
