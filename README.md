@@ -12,6 +12,8 @@ An interactive website that scores borrowers with **traditional credit data** an
 Invisible primes are people who would repay a loan but have a thin or empty credit file, so traditional credit scores cannot see them. Examples are young adults, students, gig workers and the unbanked. Alternative data such as utility bills, rent, mobile payments and employment history can help lenders spot them.
 
 ## What the website does
+<img width="2880" height="3368" alt="cosmolore github io-Invisible Primes Credit Risk Lab-fpscreenshot" src="https://github.com/user-attachments/assets/35f40554-67b8-4534-8a6f-1ea6a5d24b8e" />
+<img width="2880" height="3476" alt="cosmolore github io-Invisible Primes Credit Risk Lab-fpscreenshot (1)" src="https://github.com/user-attachments/assets/c7579daf-4152-45fb-a72d-ac84888dced3" />
 
 **1. Credit risk lab**
 Enter a borrower's details and get:
