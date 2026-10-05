@@ -3,7 +3,7 @@
 
 An interactive website that scores borrowers with **traditional credit data** and **alternative data**, built from the research project *"Invisible Primes: FinTech Lending with Alternative Data"*.
 
-**Live website:** [https://cosmolore.github.io/invisiible-primes/]
+**Live website:** [https://cosmolore.github.io/invisible-primes/]
 
 ---
 
